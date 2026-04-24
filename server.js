@@ -106,5 +106,24 @@ const server = http.createServer(async (req, res) => {
 
         return;
     }
+ 
+    if (req.method === 'DELETE' && req.url.startsWith('/products/')) {
+        const id = req.url.split('/')[2];
+        let products = await readData();
 
+        const newProducts = products.filter(p => p.id != id);
+
+        await writeData(newProducts);
+
+        res.writeHead(204);
+        return res.end();
+    }
+
+    res.writeHead(404);
+    res.end('Route not found');
+});
+
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
     
